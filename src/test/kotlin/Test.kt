@@ -1,5 +1,6 @@
 import data.Priority
 import data.Task
+import data.TasksRepository
 import data.TasksRepositoryMemory
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -9,8 +10,8 @@ import org.junit.jupiter.api.Test
 
 class Tests {
 
-   lateinit var repository: TasksRepositoryMemory
-            @BeforeEach
+   private lateinit var repository: TasksRepository
+    @BeforeEach
     fun beforeMethod() {
         repository = TasksRepositoryMemory()
     }
@@ -26,9 +27,10 @@ class Tests {
 
     @Test
     fun completeTaskAndFilterCompleted() {
-        repository.addTask(Task(name = "second", priority = Priority.MEDIUM))
-        val id = repository.getTasks().last().id ?: 0
+        val id = repository.addTask(Task(name = "second", priority = Priority.MEDIUM))
+        // val id = repository.getTasks().last().id ?: 0
         repository.completeTask(id)
+
         val name = repository.getTasks(true).first { it.id?.equals(id) == true }.name
 
         assertEquals("second", name)
@@ -41,17 +43,19 @@ class Tests {
             Task(name = "Delete report", priority = Priority.MEDIUM),
             Task(name = "Create report", priority = Priority.LOW),
             Task(name = "Create report", priority = Priority.HIGH))
+            .sortedBy { it.name }
 
         repository.addTask(expectedTasks[0])
         repository.addTask(expectedTasks[1])
         repository.addTask(expectedTasks[2])
+        repository.addTask(expectedTasks[3])
         val tasks = repository.getTasks()
 
 
         assertEquals(expectedTasks[0].name, tasks[0].name)
-        assertEquals(expectedTasks[3].name, tasks[1].name)
+        assertEquals(expectedTasks[1].name, tasks[1].name)
         assertEquals(expectedTasks[2].name, tasks[2].name)
-        assertEquals(expectedTasks[1].name, tasks[3].name)
+        assertEquals(expectedTasks[3].name, tasks[3].name)
     }
 
     @AfterEach
