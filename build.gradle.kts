@@ -23,7 +23,7 @@ dependencies {
 
 allure {
     report{
-        version.set("2.20.1")
+        version.set("2.22.0")
     }
 }
 
